@@ -11,9 +11,9 @@ from app.services.product_service import ProductService
 router = APIRouter()
 
 
-# -----------------------------------------
+# --------------------------------------------------
 # MCP Client
-# -----------------------------------------
+# --------------------------------------------------
 
 mcp_client = MCPClient()
 
@@ -22,9 +22,9 @@ tool_executor = ToolExecutor(
 )
 
 
-# -----------------------------------------
+# --------------------------------------------------
 # Services
-# -----------------------------------------
+# --------------------------------------------------
 
 weather_service = WeatherService(
     tool_executor
@@ -39,9 +39,9 @@ product_service = ProductService(
 )
 
 
-# -----------------------------------------
+# ==================================================
 # Weather
-# -----------------------------------------
+# ==================================================
 
 @router.get("/weather")
 async def get_weather(
@@ -52,8 +52,8 @@ async def get_weather(
     try:
 
         result = await weather_service.get_weather(
-            city,
-            country_code
+            city=city,
+            country_code=country_code
         )
 
         return result
@@ -66,9 +66,9 @@ async def get_weather(
         )
 
 
-# -----------------------------------------
+# ==================================================
 # Order
-# -----------------------------------------
+# ==================================================
 
 @router.get("/orders/{order_id}")
 async def get_order(
@@ -78,7 +78,7 @@ async def get_order(
     try:
 
         result = await order_service.get_order(
-            order_id
+            order_id=order_id
         )
 
         return result
@@ -91,9 +91,9 @@ async def get_order(
         )
 
 
-# -----------------------------------------
+# ==================================================
 # Product
-# -----------------------------------------
+# ==================================================
 
 @router.get("/products/{product_id}")
 async def get_product(
@@ -103,7 +103,14 @@ async def get_product(
     try:
 
         result = await product_service.get_product(
-            product_id
+            product_id=product_id
         )
 
         return result
+
+    except Exception as ex:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(ex)
+        )
